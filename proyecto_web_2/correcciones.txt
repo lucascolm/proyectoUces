@@ -1,0 +1,31 @@
+● El problema está en users.module.ts. El UsersService inyecta IUsersRepository, pero ni UsersRepository ni UsersMongooseDao están registrados como providers en el módulo. NestJS no
+  puede resolver las dependencias al arrancar.
+
+  La cadena de dependencias es:
+  - UsersService → necesita 'IUsersRepository' → UsersRepository
+  - UsersRepository → necesita 'IUsersDao' → UsersMongooseDao
+
+  Ninguno de los dos está registrado. La solución:
+
+● Update(proyectoUces\proyecto_web_2\src\users\users.module.ts)
+  ⎿  Added 7 lines, removed 1 line
+       4  
+       5  import { User, UserSchema } from './schemas/user.schema';
+       6  import { UsersService } from './services/users.service';
+       7 +import { UsersRepository } from './repositories/users.repository';                                                                                                      
+       8 +import { UsersMongooseDao } from './dao/users.moongoose.dao';                                                                                                           
+       9  
+      10  
+      11  @Module({                                       
+     ...
+      13          MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+      14    ],
+      15    controllers: [UsersController],
+      14 -  providers: [UsersService]
+      16 +  providers: [
+      17 +    UsersService,
+      18 +    { provide: 'IUsersRepository', useClass: UsersRepository },
+      19 +    { provide: 'IUsersDao', useClass: UsersMongooseDao },
+      20 +  ],
+      21  })
+      22  export class UsersModule {}
