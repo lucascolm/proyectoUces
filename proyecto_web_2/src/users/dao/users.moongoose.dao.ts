@@ -8,10 +8,10 @@ import { Model } from "mongoose"
 export interface IUsersDao {
   create(userData: CreateUserDto): Promise<User>;
   findByEmail(email: string): Promise<User | null>;
-//   findById(id: string): Promise<User | null>;
-//   findAll(): Promise<User[]>;
-//   update(id: string, updateData: Partial<User>): Promise<User | null>;
-//   delete(id: string): Promise<boolean>;
+  findById(id: string): Promise<User | null>;
+  findAll(): Promise<User[]>;
+  update(id: string, updateData: Partial<User>): Promise<User | null>;
+  delete(id: string): Promise<boolean>;
 }
 
 @Injectable()
@@ -26,6 +26,23 @@ export class UsersMongooseDao implements IUsersDao {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-      return this.userModel.findOne({mail:email}).exec();
+    return this.userModel.findOne({ mail: email }).exec();
+  }
+
+  async findById(id: string): Promise<User | null> {
+    return this.userModel.findById(id).exec();
+  }
+
+  async findAll(): Promise<User[]> {
+    return this.userModel.find().exec();
+  }
+
+  async update(id: string, updateData: Partial<User>): Promise<User | null> {
+    return this.userModel.findByIdAndUpdate(id, updateData, { new: true }).exec();
+  }
+
+  async delete(id: string): Promise<boolean> {
+    const result = await this.userModel.findByIdAndDelete(id).exec();
+    return result !== null;
   }
 }

@@ -1,14 +1,16 @@
+// src/app.module.ts
 import { Module } from '@nestjs/common';
-// import { AppController } from './app.controller';
-// import { AppService } from './app.service';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose/dist/mongoose.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ProductsModule } from './products/products.module';
 
-// src/app.module.ts
 @Module({
   imports: [
     UsersModule,
+    ProductsModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -19,6 +21,9 @@ import { MongooseModule } from '@nestjs/mongoose/dist/mongoose.module';
       }),
       inject: [ConfigService],
     }),
+   
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
