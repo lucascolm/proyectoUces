@@ -7,9 +7,10 @@ import {
   Param,
   Patch,
   Post,
-  Request,
   UseGuards,
 } from '@nestjs/common';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import type { JwtUserPayload } from '../../common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../../users/guards/jwt-auth.guard';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
@@ -23,30 +24,30 @@ export class ProductsController {
   @Post()
   async create(
     @Body() createProductDto: CreateProductDto,
-    @Request() req: { user: { userId: string } },
+    @CurrentUser() user: JwtUserPayload,
   ) {
-    return this.productsService.create(req.user.userId, createProductDto);
+    return this.productsService.create(user.userId, createProductDto);
   }
 
   @Get('mine')
-  async findMine(@Request() req: { user: { userId: string } }) {
-    return this.productsService.findMine(req.user.userId);
+  async findMine(@CurrentUser() user: JwtUserPayload) {
+    return this.productsService.findMine(user.userId);
   }
 
   @Patch(':id')
   async update(
     @Param('id') id: string,
     @Body() updateProductDto: UpdateProductDto,
-    @Request() req: { user: { userId: string } },
+    @CurrentUser() user: JwtUserPayload,
   ) {
-    return this.productsService.update(id, req.user.userId, updateProductDto);
+    return this.productsService.update(id, user.userId, updateProductDto);
   }
 
   @Delete(':id')
   async delete(
     @Param('id') id: string,
-    @Request() req: { user: { userId: string } },
+    @CurrentUser() user: JwtUserPayload,
   ) {
-    return this.productsService.delete(id, req.user.userId);
+    return this.productsService.delete(id, user.userId);
   }
 }

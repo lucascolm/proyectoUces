@@ -38,7 +38,7 @@ export class UsersMongooseDao implements IUsersDao {
   }
 
   async update(id: string, updateData: Partial<User>): Promise<User | null> {
-    return this.userModel.findByIdAndUpdate(id, updateData, { new: true }).exec();
+    return this.userModel.findByIdAndUpdate(id, updateData, { returnDocument: 'after' }).exec();
   }
 
   async delete(id: string): Promise<boolean> {

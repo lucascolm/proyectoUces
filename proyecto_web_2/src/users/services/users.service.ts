@@ -4,6 +4,7 @@ import { CreateUserDto } from "../dto/create-user.dto";
 import { UserResponseDto } from "../dto/user-response.dto";
 import { plainToClass } from "class-transformer";
 import { User } from "../schemas/user.schema";
+import { UserRole } from '../schemas/user.schema';
 
 // src/users/services/users.service.ts
 @Injectable()
@@ -50,4 +51,10 @@ export class UsersService {
   async delete(id: string): Promise<boolean> {
     return this.usersRepository.delete(id);
   }
+
+  async updateRole(userId: string, role: UserRole) {
+  const user = await this.usersRepository.update(userId, { role });
+  if (!user) throw new NotFoundException('User not found');
+  return { message: `Role updated to ${role}` };
+}
 }

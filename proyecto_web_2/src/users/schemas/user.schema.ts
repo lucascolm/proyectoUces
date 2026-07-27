@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose"
 export enum UserRole {
   USER = 'user',
+  SELLER = 'seller',
   ADMIN = 'admin',
 }
 

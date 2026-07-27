@@ -6,11 +6,13 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ProductsModule } from './products/products.module';
+import { PromotionsModule } from './promotions/promotions.module';
 
 @Module({
   imports: [
     UsersModule,
     ProductsModule,
+    PromotionsModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

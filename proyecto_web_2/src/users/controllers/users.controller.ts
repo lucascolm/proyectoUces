@@ -1,8 +1,9 @@
 // src/users/controllers/users.controller.ts
-import { Body, Controller, Get, Post, UseGuards, Param, Delete, Put } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, Param, Delete, Put, Patch,Request} from '@nestjs/common';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UsersService } from '../services/users.service';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { UserRole } from '../schemas/user.schema';
 
 @Controller('users')
 export class UsersController {
@@ -35,5 +36,12 @@ export class UsersController {
   @Delete(':id')
   async deleteUser(@Param('id') id: string) {
     return this.usersService.delete(id);
+  }
+
+
+  @Patch('me/become-seller')
+  @UseGuards(JwtAuthGuard)
+  async becomeSeller(@Request() req: { user: { userId: string } }) {
+  return this.usersService.updateRole(req.user.userId, UserRole.SELLER);
   }
 }
